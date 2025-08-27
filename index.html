@@ -49,6 +49,11 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             gap: 15px;
         }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
         .issue-title {
             flex: 1;
             color: #0969da;
@@ -58,7 +63,7 @@
             text-overflow: ellipsis;
             font-size: 14px;
         }
-        .copy-btn { 
+        .copy-btn, .original-btn { 
             flex-shrink: 0;
             padding: 8px 12px;
             background: #f6f8fa;
@@ -71,10 +76,19 @@
             gap: 6px;
             transition: all 0.2s ease;
         }
-        .copy-btn:hover {
+        .copy-btn:hover, .original-btn:hover {
             background: #0969da;
             color: white;
             border-color: #0969da;
+        }
+        .original-btn {
+            background: #f0f8ff;
+            border-color: #0969da;
+            color: #0969da;
+        }
+        .original-btn:hover {
+            background: #0969da;
+            color: white;
         }
         .toast {
             position: fixed;
@@ -141,6 +155,17 @@
                 titleLink.target = '_blank';
                 titleLink.textContent = `#${issue.number} - ${issue.title}`;
                 
+                const buttonGroup = document.createElement('div');
+                buttonGroup.className = 'button-group';
+                
+                const originalButton = document.createElement('button');
+                originalButton.className = 'original-btn';
+                originalButton.innerHTML = '<i class="fas fa-external-link-alt"></i> Open';
+                originalButton.onclick = () => {
+                    const shortLink = `https://andronasef.github.io/links/${issue.number}`;
+                    window.open(shortLink, '_blank');
+                };
+                
                 const copyButton = document.createElement('button');
                 copyButton.className = 'copy-btn';
                 copyButton.innerHTML = '<i class="far fa-copy"></i> Copy';
@@ -155,8 +180,11 @@
                         .catch(err => console.error('Copy failed:', err));
                 };
                 
+                buttonGroup.appendChild(originalButton);
+                buttonGroup.appendChild(copyButton);
+                
                 issueElement.appendChild(titleLink);
-                issueElement.appendChild(copyButton);
+                issueElement.appendChild(buttonGroup);
                 listContainer.appendChild(issueElement);
             });
         }
